@@ -276,8 +276,29 @@ algxControllers.controller('algxController', ["$scope", "$location", "debounce",
     return text.trim(); // The trim is redundant for angular.js, but let's keep it just in case.
   }
 
+  $scope.newState = function(){
+    var stateInfo = {
+      alg : $scope.alg,
+      setup : $scope.setup,
+      puzzle : $scope.puzzle.id,
+      type : $scope.type.id,
+      scheme : $scope.scheme.id,
+      stage : $scope.stage.id,
+      title : $scope.title,
+      view : $scope.view.id,
+    };
+    console.log(stateInfo);
+    console.log($location.url().substring(1, $location.url().length - 1));
+    history.pushState(stateInfo, stateInfo.title, $location.url().substring(1, $location.url().length - 1));
+  }
+
   $scope.updateLocation = function() {
     $location.replace();
+    if($scope.StateTimeout !== undefined){
+        window.clearTimeout($scope.StateTimeout);
+    }
+    $scope.StateTimeout = window.setTimeout($scope.newState, 10000);
+
     setWithDefault("alg", escape_alg($scope.alg));
     setWithDefault("setup", escape_alg($scope.setup));
     setWithDefault("puzzle", $scope.puzzle.id);
